@@ -97,6 +97,8 @@ new CmdParser(botinstance, prefix)
 
 Returns **`CmdParser`** *this*
 
+<br>
+
 ---
 
 ### PROPERTIES
@@ -113,6 +115,7 @@ Returns **`CmdParser`** *this*
 - `CHAT`: *`CHAT`*
 - `MISC`: *`MISC`*
 
+<br>
 
 ### `.errors`
 
@@ -122,6 +125,8 @@ Returns **`CmdParser`** *this*
 - `NOT_PERMITTED`: *`1`*
 - `EXECUTION_ERROR`: *`2`*
 - `WRONG_CHANNEL`: *`3`*
+
+<br>
 
 ---
 
@@ -135,6 +140,7 @@ Returns **`CmdParser`** *this*
 |-----------|------|-------------|
 | msg | Discord.Message | Message which command was parsed from |
 
+<br>
 
 ### `commandFailed`
 
@@ -147,6 +153,8 @@ Returns **`CmdParser`** *this*
 
 **ATTENTION:** If errortype `EXECUTION_ERROR` appears, parameter 2 will not be a `Discord.Message`, instead there will be the error as `string` and as 3rd parameter the message! So you may need to check errortype before accessing message or there may occure errors!<br>
 *This will be updated later and is only a temporary circumstance.*
+
+<br>
 
 ---
 
@@ -168,6 +176,7 @@ Returns **`CmdParser`** *this*
 
 Returns **`CmdParser`** *this*
 
+<br>
 
 ### `.setPerms(roles, permlvl)`
 
@@ -180,6 +189,7 @@ Returns **`CmdParser`** *this*
 
 Returns **`CmdParser`** *this*
 
+<br>
 
 ### `.getPermLvl(memb)`
 
@@ -191,6 +201,7 @@ Returns **`CmdParser`** *this*
 
 Returns **`number`** *Permission Level*
 
+<br>
 
 ### `.parse(msg)`
 
@@ -201,3 +212,5 @@ Returns **`number`** *Permission Level*
 | msg | Discord.Message | no | Message to parse command |
 
 Returns **`CmdParser`** *this*
+
+<br>
