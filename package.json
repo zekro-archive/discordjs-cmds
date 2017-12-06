@@ -1,0 +1,31 @@
+{
+    "name": "discordjs-cmds",
+    "version": "0.2.0",
+    "description": "Simple command parser for discord.js",
+    "main": "src/cmdparser.js",
+    "scripts": {
+      "test": "node tests/testbot.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/zekrotja/discordjs-cmds.git"
+    },
+    "keywords": [
+      "discord.js",
+      "discordjs",
+      "command",
+      "parser",
+      "commands",
+      "discord"
+    ],
+    "author": "zekro Development (zekro.de)",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/zekrotja/discordjs-cmds/issues"
+    },
+    "homepage": "https://github.com/zekrotja/discordjs-cmds#readme",
+    "dependencies": {
+        "discord.js": "^11.2.1"
+    }
+  }
+  
