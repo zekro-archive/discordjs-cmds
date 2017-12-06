@@ -80,6 +80,20 @@ cmd.on('commandFailed', (errtype) => console.log(`Failed Command: ${errtype}`))
 
 ---
 
+# Default Commands
+
+There are some default implemented commands:
+
+## `help`
+
+> Sends the user a list of commands via DM
+
+## `help <invoke>`
+
+> Get the help message of a registered command
+
+---
+
 # Docs
 
 ## CmdParser
