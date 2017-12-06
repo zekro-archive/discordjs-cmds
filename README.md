@@ -18,6 +18,7 @@ npm install discordjs-cmds --save
 
 - [**Disclaimer**](https://github.com/zekroTJA/discordjs-cmds#disclaimer)
 - [**Usage**](https://github.com/zekroTJA/discordjs-cmds#usage)
+- [**Usage**](https://github.com/zekroTJA/discordjs-cmds#default-commands)
 - [**Docs**](https://github.com/zekroTJA/discordjs-cmds#docs)
     - [Constructor](https://github.com/zekroTJA/discordjs-cmds#constructor)
     - [Properties](https://github.com/zekroTJA/discordjs-cmds#properties)
@@ -84,11 +85,11 @@ cmd.on('commandFailed', (errtype) => console.log(`Failed Command: ${errtype}`))
 
 There are some default implemented commands:
 
-## `help`
+### `help`
 
 > Sends the user a list of commands via DM
 
-## `help <invoke>`
+### `help <invoke>`
 
 > Get the help message of a registered command
 
