@@ -14,6 +14,18 @@ npm install discordjs-cmds --save
 
 ---
 
+# Contents
+
+- [**Disclaimer**](https://github.com/zekroTJA/discordjs-cmds#disclaimer)
+- [**Usage**](https://github.com/zekroTJA/discordjs-cmds#usage)
+- [**Docs**](https://github.com/zekroTJA/discordjs-cmds#docs)
+    - [Constructor](https://github.com/zekroTJA/discordjs-cmds#constructor)
+    - [Properties](https://github.com/zekroTJA/discordjs-cmds#properties)
+    - [Events](https://github.com/zekroTJA/discordjs-cmds#events)
+    - [Methods](https://github.com/zekroTJA/discordjs-cmds#methods)
+
+---
+
 # Disclaimer
 
 This project is currently in an early development phase, which means, that there could be some unidentified bugs. Also, there will be much more functions added and advanced later! Feel free to post **issues** or **pull request** if you noticed a bug or if you have improvement suggestions!
