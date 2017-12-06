@@ -206,6 +206,19 @@ Returns **`CmdParser`** *this*
 
 <br>
 
+### `.setOptions(options)`
+
+> Edit some default options of command parser
+
+| Parameter | Type | Optional (Default) | Description |
+|-----------|------|--------------------|-------------|
+| options.msgcolor | number | yes (`0xd2db2b`) | Color of some messages like help message |
+| options.cmdlog | boolean | yes (`true`) | Send defaultly logs into console after command was executed |
+
+Returns **`CmdParser`** *this*
+
+<br>
+
 ### `.getPermLvl(memb)`
 
 > Get the permission level of a member
@@ -227,5 +240,18 @@ Returns **`number`** *Permission Level*
 | msg | Discord.Message | no | Message to parse command |
 
 Returns **`CmdParser`** *this*
+
+<br>
+
+### `.sendHelpMsg(chan, invoke)`
+
+> Send a help message into a channel. If `invoke` is not given, sending full command list, else sending information about given command invoke
+
+| Parameter | Type | Optional (Default) | Description |
+|-----------|------|--------------------|-------------|
+| chan | Discord.Channel | no | Channel where message will be send |
+| invoke | string | yes (`null`) | Send details of given command or full list of cmds |
+
+Returns **`Discord.Message`** *Message sendt into channel*
 
 <br>
