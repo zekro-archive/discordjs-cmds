@@ -93,7 +93,7 @@ Returns **`CmdParser`** *this*
 
 > Some standardised enum like types for commands
 
-- `ADMIN`: *``*
+- `ADMIN`: *`ADMIN`*
 - `GUILDADMIN`: *`GUILDADMIN`*
 - `MODERATION`: *`MODERATION`*
 - `FUN`: *`FUN`*
