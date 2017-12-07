@@ -20,6 +20,7 @@ npm install discordjs-cmds --save
 - [**Usage**](https://github.com/zekroTJA/discordjs-cmds#usage)
 - [**Default Commands**](https://github.com/zekroTJA/discordjs-cmds#default-commands)
 - [**Changelogs**](https://github.com/zekroTJA/discordjs-cmds#changelog)
+- [**To-Do**](https://github.com/zekroTJA/discordjs-cmds#to-do)
 - [**Docs**](https://github.com/zekroTJA/discordjs-cmds#docs)
     - [Constructor](https://github.com/zekroTJA/discordjs-cmds#constructor)
     - [Properties](https://github.com/zekroTJA/discordjs-cmds#properties)
@@ -99,6 +100,16 @@ There are some default implemented commands:
 # Changelog
 
 All changelogs (after version `0.3.0`) you can find in the [**CHANGELOG.md**](https://github.com/zekroTJA/discordjs-cmds/blob/master/CHANGELOG.md).
+
+---
+
+# To-Do
+
+- [ ] Guild specific prefixes
+- [ ] Custom command types
+- [x] Aliases
+- [x] Permissions
+- [x] Detailed help command
 
 ---
 
