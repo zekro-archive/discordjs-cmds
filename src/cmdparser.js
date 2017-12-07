@@ -30,7 +30,9 @@ class CmdParser {
         this.helplist = {}
         this.options = {
             msgcolor: 0xd2db2b,
-            cmdlog: true
+            cmdlog: true,
+            msgedit: true,
+            logfilepath: null
         }
       
         class Emitter extends EventEmitter {}
@@ -80,13 +82,17 @@ class CmdParser {
                 type:        type ? type : this.type.MISC,
                 perm:        perm ? perm : 0 
             }
+            if (this.options.cmdlog)
+                console.log(`[CMDPARSER] ${Object.keys(this.helplist).length} commands registered`)
             return this
         }
       
         /**
          * Set some options for CmdParser.
-         * @param {number}  options.msgcolor Color for some messages like help message
-         * @param {boolean} options.cmdlog   Log commands defaulty after executing in console
+         * @param {number}  options.msgcolor    Color for some messages like help message
+         * @param {boolean} options.cmdlog      Log commands defaulty after executing in console
+         * @param {boolean} options.msgedit     Parse edited messages as command message
+         * @param {string}  options.logfilepath Write command log into logfile, set to null or '' to disable
          */
         this.setOptions = function(options) {
             if (typeof options.msgcolor == "number")
@@ -96,7 +102,15 @@ class CmdParser {
             if (typeof options.cmdlog == "boolean")
                 this.options.cmdlog = options.cmdlog
             else if (options.cmdlog)
-                console.log("[CMDPARSER] Invalid option set for 'options'")
+                console.log("[CMDPARSER] Invalid option set for 'cmdlog'")
+            if (typeof options.msgedit == "boolean")
+                this.options.msgedit == options.msgedit
+            else if (options.msgedit)
+                console.log("[CMDPARSER] Invalid option set for 'msgedit'")
+            if (typeof options.logfilepath == "string")
+                this.options.logfilepath = options.logfilepath
+            else if (options.logfilepath)
+                console.log("[CMDPARSER] Invalid option set for 'logfilepath'")
         }
 
         /**
@@ -110,7 +124,7 @@ class CmdParser {
             if (!Array.isArray(roles))
                 roles = [roles]
             roles.forEach(r => {
-                this.perms[r] = permlvl
+                this.perms[typeof r == "object" ? r.id : r] = permlvl
             })
             return this
         }
@@ -142,8 +156,13 @@ class CmdParser {
             
                 // Splitting args with " " but not in quotes
                 // -> https://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli#16261693
-                const invoke = cont.split(' ')[0].substr(this.prefix.length),
-                      args   = cont.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g).slice(1)
+                const invoke = cont
+                    .split(' ')[0]
+                    .substr(this.prefix.length)
+                const args   = cont
+                    .match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
+                    .slice(1)
+                    .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
             
                 if (invoke == "help") {
                     this.sendHelpMsg(chan, args[0])
@@ -152,17 +171,32 @@ class CmdParser {
                     var lvlm = parseInt(this.getPermLvl(author))
                     var lvlr = parseInt(this.cmds[invoke].perm)
                     if (lvlm < lvlr) {
-                        this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg)
+                        this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {
                         try {
                             this.cmds[invoke].cmdfunc(msg, args)
                             if (this.options.cmdlog)
                                 console.log(`[COMMAND] (${author.user.username} @ ${guild.name}) '${cont}'`)
+                            if (this.options.logfilepath && this.options.logfilepath != '') {
+                                var fs = require('fs')
+                                var pathsplit = this.options.logfilepath.split('/')
+                                if (pathsplit[pathsplit.length - 1].indexOf('.') > -1)
+                                    var path = pathsplit.join('/')
+                                else
+                                    var path = pathsplit.join('/') + '/cmdlog.txt'
+                                var onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
+                                if (!fs.existsSync(onlypath))
+                                    fs.mkdirSync(onlypath)
+                                fs.appendFile(path, `[${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
+                                    if (err)
+                                        this.event.emit('logError', msg, err)
+                                })
+                            }
                             this.event.emit('commandExecuted', msg)
                         }
                         catch (err) {
-                            this.event.emit('commandFailed', this.errors.EXECUTION_ERROR, err, msg)
+                            this.event.emit('commandFailed', this.errors.EXECUTION_ERROR, msg, err)
                         }
                     }
                 }
@@ -186,7 +220,12 @@ class CmdParser {
                 var cmd = this.cmds[invoke]
                 emb
                     .addField("Description", cmd.description)
-                    .addField("Aliases", this.helplist[invoke].aliases.length > 0 ? this.helplist[invoke].aliases.join(", ") : "*No aliases*")
+                    .addField("Aliases", (() => {
+                        if (this.helplist[invoke])
+                            return this.helplist[invoke].aliases.length > 0 ? this.helplist[invoke].aliases.join(", ") : "*No aliases*"
+                        return "*You provided help for a command via an alias, so here will no aliases be shown. Request help for root command to get list of aliases:*\n" +
+                               `**Root Invoke:** \`${cmd.root}\``
+                    })())
                     .addField("Usage", cmd.help)
                     .addField("Type", cmd.type, true)
                     .addField("Permission Lvl", cmd.perm, true)
@@ -222,7 +261,16 @@ class CmdParser {
                 this.parse(msg)
             }
             else
-                this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg)
+                this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
+        })
+
+        bot.on('messageUpdate', (msgOld, msgNew) => {
+            if (!this.options.msgedit) return
+            if (msgNew.channel.type == "text") {
+                this.parse(msgNew)
+            }
+            else
+                this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
         })
     }
 }
