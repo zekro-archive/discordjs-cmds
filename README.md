@@ -18,8 +18,8 @@ npm install discordjs-cmds --save
 
 - [**Disclaimer**](https://github.com/zekroTJA/discordjs-cmds#disclaimer)
 - [**Usage**](https://github.com/zekroTJA/discordjs-cmds#usage)
-- [**Usage**](https://github.com/zekroTJA/discordjs-cmds#default-commands)
-- [**Usage**](https://github.com/zekroTJA/discordjs-cmds#changelog)
+- [**Default Commands**](https://github.com/zekroTJA/discordjs-cmds#default-commands)
+- [**Changelogs**](https://github.com/zekroTJA/discordjs-cmds#changelog)
 - [**Docs**](https://github.com/zekroTJA/discordjs-cmds#docs)
     - [Constructor](https://github.com/zekroTJA/discordjs-cmds#constructor)
     - [Properties](https://github.com/zekroTJA/discordjs-cmds#properties)
