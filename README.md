@@ -19,6 +19,7 @@ npm install discordjs-cmds --save
 - [**Disclaimer**](https://github.com/zekroTJA/discordjs-cmds#disclaimer)
 - [**Usage**](https://github.com/zekroTJA/discordjs-cmds#usage)
 - [**Usage**](https://github.com/zekroTJA/discordjs-cmds#default-commands)
+- [**Usage**](https://github.com/zekroTJA/discordjs-cmds#changelog)
 - [**Docs**](https://github.com/zekroTJA/discordjs-cmds#docs)
     - [Constructor](https://github.com/zekroTJA/discordjs-cmds#constructor)
     - [Properties](https://github.com/zekroTJA/discordjs-cmds#properties)
@@ -95,6 +96,12 @@ There are some default implemented commands:
 
 ---
 
+# Changelog
+
+All changelogs (after version `0.3.0`) you can find in the [**CHANGELOG.md**](https://github.com/zekroTJA/discordjs-cmds/blob/master/CHANGELOG.md).
+
+---
+
 # Docs
 
 ## CmdParser
@@ -165,9 +172,18 @@ Returns **`CmdParser`** *this*
 |-----------|------|-------------|
 | errortype | CmdParser.errors | Error type |
 | msg | Discord.Message | Message command should has parsed from |
+| error | string | Error description / details |
 
-**ATTENTION:** If errortype `EXECUTION_ERROR` appears, parameter 2 will not be a `Discord.Message`, instead there will be the error as `string` and as 3rd parameter the message! So you may need to check errortype before accessing message or there may occure errors!<br>
-*This will be updated later and is only a temporary circumstance.*
+<br>
+
+### `logError`
+
+> Emitted when command could not be written correctly into log file
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| msg | Discord.Message | Message from sent command |
+| err | string | Error description / details |
 
 <br>
 
@@ -199,7 +215,7 @@ Returns **`CmdParser`** *this*
 
 | Parameter | Type | Optional (Default) | Description |
 |-----------|------|--------------------|-------------|
-| roles | string / string[] | no | Role ID's of roles |
+| roles | string / string[] / Discord.Role / Discord.Role[] | no | Role ID's of roles |
 | permlvl | number | no | Permission LvL roles will get refered to |
 
 Returns **`CmdParser`** *this*
@@ -214,6 +230,8 @@ Returns **`CmdParser`** *this*
 |-----------|------|--------------------|-------------|
 | options.msgcolor | number | yes (`0xd2db2b`) | Color of some messages like help message |
 | options.cmdlog | boolean | yes (`true`) | Send defaultly logs into console after command was executed |
+| options.msgedit | boolean | yes (`true`) | Parse edited messages like send messages as command |
+| options.logfilepath | string | yes (`null`) | Path for command log file |
 
 Returns **`CmdParser`** *this*
 
