@@ -6,7 +6,7 @@
 - added option to set time format of the execution time in log  
 *For formating information please take a look in the docs.*
 - added option if invokes should be parsed case sensitive or not  
-*defaultly set to `false`, so invokes are not parsed case sensitive.*
+*defaultly set to `true`, so invokes are not parsed case sensitive.*
 - fixed bug, that option `msgedit` could not be set
 
 # 0.4.0
