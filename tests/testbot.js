@@ -1,19 +1,29 @@
-const Discord = require('discord.js'),
-      CommandParser = require('../src/cmdparser.js'),
-      config = require('../token.json')
-      
-      
-const client = new Discord.Client(),
-      cmd = new CommandParser.CmdParser(client, "::")
+const Discord = require('discord.js')
+const CommandParser = require('../src/cmdparser.js')
+const config = require('../token.json')
 
+
+const client = new Discord.Client()
+const cmd = new CommandParser.CmdParser(client, "::")
+
+function cmdTest(msg, args) {
+      msg.channel.send(`Rolename: ${msg.member.highestRole.name}\ntypeof role: \`${typeof msg.member.highestRole}\``)
+}
 
 cmd
-    .register(() => console.log("test123456"), "test", ["t"], "test command", null, null, 2)
-    .setPerms("289901361951277056", 3)
-    .setOptions({
-        msgcolor: 0x0cd682,
-        cmdlog: "wrongoptionlel"
-    })
+      .addType("LOL")
+      .register(cmdTest, "test", ["t"], "test command", null, "LOL", 2)
+      .setPerms("289901361951277056", 3)
+      .setOptions({
+          msgcolor: 0x0cd682,
+          cmdlog: "wrongoptionlel",
+          logfilepath: "logfiles/",
+          timeformat: "Y/M/D h:m:s",
+          invoketolower: false
+      })
 
+
+cmd.event.on('logError', (msg, err) => console.log(err))
+cmd.event.on('commandFailed', (type, msg, err) => console.log(err))
 
 client.login(config.token)
