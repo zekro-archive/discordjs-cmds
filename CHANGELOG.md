@@ -1,3 +1,14 @@
+# 0.5.0
+
+- added method for registering custom command types  
+*The can be used later in command registration like default command types or directly with the category strings.*
+- command log in console and file will now show the time of execution
+- added option to set time format of the execution time in log  
+*For formating information please take a look in the docs.*
+- added option if invokes should be parsed case sensitive or not  
+*defaultly set to `false`, so invokes are not parsed case sensitive.*
+- fixed bug, that option `msgedit` could not be set
+
 # 0.4.0
 
 - added option to parse edited messages as command  
