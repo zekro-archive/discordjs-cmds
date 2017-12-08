@@ -1,6 +1,7 @@
 const EventEmitter = require('events')
 const Discord = require('discord.js')
 
+
 /**
 * Create instance of command parser
 * @param {string}         prefix Command Prefix
@@ -32,7 +33,9 @@ class CmdParser {
             msgcolor: 0xd2db2b,
             cmdlog: true,
             msgedit: true,
-            logfilepath: null
+            logfilepath: null,
+            timeformat: null,
+            invoketolower: true
         }
       
         class Emitter extends EventEmitter {}
@@ -50,6 +53,7 @@ class CmdParser {
          * @returns {CmdParser}
          */
         this.register = function(cmdfunc, invoke, aliases, description, help, type, perm) {
+            type = type.toUpperCase()
             this.cmds[invoke] = {
                 cmdfunc:     cmdfunc,
                 invoke:      invoke,
@@ -89,10 +93,12 @@ class CmdParser {
       
         /**
          * Set some options for CmdParser.
-         * @param {number}  options.msgcolor    Color for some messages like help message
-         * @param {boolean} options.cmdlog      Log commands defaulty after executing in console
-         * @param {boolean} options.msgedit     Parse edited messages as command message
-         * @param {string}  options.logfilepath Write command log into logfile, set to null or '' to disable
+         * @param {number}  options.msgcolor      Color for some messages like help message
+         * @param {boolean} options.cmdlog        Log commands defaulty after executing in console
+         * @param {boolean} options.msgedit       Parse edited messages as command message
+         * @param {string}  options.logfilepath   Write command log into logfile, set to null or '' to disable
+         * @param {string}  options.timeformat    Time / Date format for log time
+         * @param {boolean} options.invoketolower Set if entered invoke should be parsed case sensitive or not
          */
         this.setOptions = function(options) {
             if (typeof options.msgcolor == "number")
@@ -104,13 +110,21 @@ class CmdParser {
             else if (options.cmdlog)
                 console.log("[CMDPARSER] Invalid option set for 'cmdlog'")
             if (typeof options.msgedit == "boolean")
-                this.options.msgedit == options.msgedit
+                this.options.msgedit = options.msgedit
             else if (options.msgedit)
                 console.log("[CMDPARSER] Invalid option set for 'msgedit'")
             if (typeof options.logfilepath == "string")
                 this.options.logfilepath = options.logfilepath
             else if (options.logfilepath)
                 console.log("[CMDPARSER] Invalid option set for 'logfilepath'")
+            if (typeof options.timeformat == "string")
+                this.options.timeformat = options.timeformat
+            else if (options.timeformat)
+                console.log("[CMDPARSER] Invalid option set for 'timeformat'")
+            if (typeof options.invoketolower == "boolean")
+                this.options.invoketolower = options.invoketolower
+            else if (options.invoketolower)
+                console.log("[CMDPARSER] Invalid option set for 'invoketolower'")
         }
 
         /**
@@ -140,6 +154,35 @@ class CmdParser {
         } 
       
         /**
+         * Add custom command type(s).
+         * Command times are only parsed as uppercase strings, so if you
+         * enter lowercase, keep in mind it will be parsed to upper automatically.
+         * Then, you can use it with cmdParser.type.YOURTYPE or directly via the
+         * string "YOURTYPE"
+         * @param {(string|string[])} typename Typename(s)
+         * @returns {CmdParser}
+         */
+        this.addType = function(typename) {
+            if (Array.isArray(typename))
+                typename.forEach(t => {
+                    if (typeof t != "string" || !t)
+                        console.log("[CMDPARSER] Could not set new type: Invalid argument!")
+                    else {
+                        t = t.toUpperCase()
+                        this.type[t] = t
+                    }
+                })
+            else
+                if (typeof typename != "string" || !typename)
+                    console.log("[CMDPARSER] Could not set new type: Invalid argument!")
+                else {
+                    typename = typename.toUpperCase()
+                    this.type[typename] = typename
+                }
+            return this
+        }
+
+        /**
          * Parse a message from a message event.
          * @param {Discord.Message} msg Message Event
          * @returns {CmdParser}
@@ -156,9 +199,11 @@ class CmdParser {
             
                 // Splitting args with " " but not in quotes
                 // -> https://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli#16261693
-                const invoke = cont
+                var invoke = cont
                     .split(' ')[0]
                     .substr(this.prefix.length)
+                if (this.options.invoketolower)
+                    invoke = invoke.toLowerCase()
                 const args   = cont
                     .match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
                     .slice(1)
@@ -175,9 +220,9 @@ class CmdParser {
                     } 
                     else {
                         try {
-                            this.cmds[invoke].cmdfunc(msg, args)
                             if (this.options.cmdlog)
-                                console.log(`[COMMAND] (${author.user.username} @ ${guild.name}) '${cont}'`)
+                                console.log(`[COMMAND] ${this.getTime()} (${author.user.username} @ ${guild.name}) '${cont}'`)
+                            this.cmds[invoke].cmdfunc(msg, args)
                             if (this.options.logfilepath && this.options.logfilepath != '') {
                                 var fs = require('fs')
                                 var pathsplit = this.options.logfilepath.split('/')
@@ -188,7 +233,7 @@ class CmdParser {
                                 var onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
                                 if (!fs.existsSync(onlypath))
                                     fs.mkdirSync(onlypath)
-                                fs.appendFile(path, `[${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
+                                fs.appendFile(path, `${this.getTime()} [${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
                                     if (err)
                                         this.event.emit('logError', msg, err)
                                 })
@@ -272,6 +317,30 @@ class CmdParser {
             else
                 this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
         })
+
+        this.getTime = function() {
+            function btf(inp) {
+                if (inp < 10)
+                return "0" + inp;
+                return inp;
+            }
+            var date = new Date(),
+                y = date.getFullYear(),
+                m = btf(date.getMonth()),
+            d = btf(date.getDate()),
+            h = btf(date.getHours()),
+            min = btf(date.getMinutes()),
+            s = btf(date.getSeconds());
+            return !this.options.timeformat 
+                   ? `[${d}.${m}.${y} - ${h}:${min}:${s}]`
+                   : this.options.timeformat
+                        .replace('D', d)
+                        .replace('M', m)
+                        .replace('Y', y)
+                        .replace('h', h)
+                        .replace('m', min)
+                        .replace('s', s);
+        }
     }
 }
 
