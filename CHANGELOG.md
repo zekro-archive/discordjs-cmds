@@ -1,4 +1,4 @@
-# 0.5.0
+# 0.5.1
 
 - added method for registering custom command types  
 *The can be used later in command registration like default command types or directly with the category strings.*
