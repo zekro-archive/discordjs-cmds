@@ -29,6 +29,8 @@ class CmdParser {
         this.cmds = {}
         this.perms = {}
         this.helplist = {}
+        this.host = null
+        this.guildpres = {}
         this.options = {
             msgcolor: 0xd2db2b,
             cmdlog: true,
@@ -181,6 +183,36 @@ class CmdParser {
         }
 
         /**
+         * Set the host of the bot for maximum permission level (100)
+         * @param {(Discord.User|Discord.Member|number|string)} host Discord account of host of the bot
+         * @returns {CmdParser}
+         */
+        this.setHost = function(host) {
+            if (typeof host == 'object')
+                this.host = host.id
+            else if (typeof host == 'number')
+                this.host = host.toString()
+            else
+                this.host = host
+            return this
+        }
+
+        /**
+         * Set guild specific prefixes.
+         * @param {object} pres {"GUILD ID 1": "PREFIX",<br/> "GUILD ID 2": "PREFIX"} 
+         * @returns {CmdParser}
+         */
+        this.setGuildPres = function(pres) {
+            for (var g in pres) {
+                if (typeof g == 'object')
+                    this.guildpres[g.id] = pres[g]
+                else
+                    this.guildpres[g] = pres[g]
+            }
+            return this
+        }
+
+        /**
          * Parse a message from a message event.
          * @param {Discord.Message} msg Message Event
          * @returns {CmdParser}
@@ -192,14 +224,27 @@ class CmdParser {
                   chan   = msg.channel
         
             if (author == null) return
-        
-            if (author.id != this.bot.user.id && cont.startsWith(this.prefix)) {
+
+            this.checkPrefix = function() {
+                if (cont.startsWith(this.prefix)) {
+                    this.currPrefix = this.prefix
+                    return true
+                }
+                if (guild.id in this.guildpres)
+                    if (cont.startsWith(this.guildpres[guild.id])) {
+                        this.currPrefix = this.guildpres[guild.id]
+                        return true
+                    }
+                return false
+            }
+
+            if (author.id != this.bot.user.id && this.checkPrefix()) {
             
                 // Splitting args with " " but not in quotes
                 // -> https://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli#16261693
                 var invoke = cont
                     .split(' ')[0]
-                    .substr(this.prefix.length)
+                    .substr(this.currPrefix.length)
                 if (this.options.invoketolower)
                     invoke = invoke.toLowerCase()
                 const args   = cont
@@ -213,7 +258,7 @@ class CmdParser {
                 else if (invoke in this.cmds) {
                     var lvlm = parseInt(this.getPermLvl(author))
                     var lvlr = parseInt(this.cmds[invoke].perm)
-                    if (lvlm < lvlr) {
+                    if (lvlm < lvlr && author.id != this.host) {
                         this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {

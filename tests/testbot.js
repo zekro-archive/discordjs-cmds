@@ -11,6 +11,7 @@ function cmdTest(msg, args) {
 }
 
 cmd
+      .setGuildPres({"287535046762561536": "_"})
       .addType("LOL")
       .register(cmdTest, "test", ["t"], "test command", null, "LOL", 2)
       .setPerms("289901361951277056", 3)

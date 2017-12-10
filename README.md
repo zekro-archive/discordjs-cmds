@@ -107,7 +107,7 @@ All changelogs (after version `0.3.0`) you can find in the [**CHANGELOG.md**](ht
 
 - [ ] Add option + function to gibe guild owners higher perm lvl
 - [ ] Method to register bot host with max perm lvl
-- [ ] Guild specific prefixes
+- [x] Guild specific prefixes
 - [x] Custom command types
 - [x] Aliases
 - [x] Permissions
@@ -247,6 +247,30 @@ Returns **`CmdParser`** *this*
 | options.logfilepath | string | yes (`null`) | Path for command log file |
 | options.timeformat | string | yes (`null`) | Time format<br>`D` - Day<br>`M` - Month<br>`Y` - Year<br>`h` - Hour<br>`m` - Minute<br>`s` - Second |
 | options.invoketolower | boolean | yes (`true`) | Set if invoke should be converted to lowercase or not |
+
+Returns **`CmdParser`** *this*
+
+<br>
+
+### `.setHost(host)`
+
+> Set the Discord account of the host of the bot for maximum permission
+
+| Parameter | Type | Optional (Default) | Description |
+|-----------|------|--------------------|-------------|
+| host | Discord.Member / Discord.User / string / number | no | Discord User / Member / User ID of bots host |
+
+Returns **`CmdParser`** *this*
+
+<br>
+
+### `.setGuildPres(guildpres)`
+
+> Set the specific prefixes for guils
+
+| Parameter | Type | Optional (Default) | Description |
+|-----------|------|--------------------|-------------|
+| guildpres | object | no | Like example: ```{"23463623423452345": "-", "2374827347829347": "."}``` |
 
 Returns **`CmdParser`** *this*
 
