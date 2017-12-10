@@ -86,8 +86,6 @@ class CmdParser {
                 type:        type ? type : this.type.MISC,
                 perm:        perm ? perm : 0 
             }
-            if (this.options.cmdlog)
-                console.log(`[CMDPARSER] ${Object.keys(this.helplist).length} commands registered`)
             return this
         }
       
