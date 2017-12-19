@@ -17,10 +17,11 @@ cmd
       .setPerms("289901361951277056", 3)
       .setOptions({
           msgcolor: 0x0cd682,
-          cmdlog: "wrongoptionlel",
+          cmdlog: true,
           logfilepath: "logfiles/",
           timeformat: "Y/M/D h:m:s",
-          invoketolower: false
+          invoketolower: false,
+          guildonwerperm: 3,
       })
 
 

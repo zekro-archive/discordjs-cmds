@@ -37,7 +37,8 @@ class CmdParser {
             msgedit: true,
             logfilepath: null,
             timeformat: null,
-            invoketolower: true
+            invoketolower: true,
+            guildonwerperm: null
         }
       
         class Emitter extends EventEmitter {}
@@ -93,12 +94,13 @@ class CmdParser {
       
         /**
          * Set some options for CmdParser.
-         * @param {number}  options.msgcolor      Color for some messages like help message
-         * @param {boolean} options.cmdlog        Log commands defaulty after executing in console
-         * @param {boolean} options.msgedit       Parse edited messages as command message
-         * @param {string}  options.logfilepath   Write command log into logfile, set to null or '' to disable
-         * @param {string}  options.timeformat    Time / Date format for log time
-         * @param {boolean} options.invoketolower Set if entered invoke should be parsed case sensitive or not
+         * @param {number}  options.msgcolor       Color for some messages like help message
+         * @param {boolean} options.cmdlog         Log commands defaulty after executing in console
+         * @param {boolean} options.msgedit        Parse edited messages as command message
+         * @param {string}  options.logfilepath    Write command log into logfile, set to null or '' to disable
+         * @param {string}  options.timeformat     Time / Date format for log time
+         * @param {boolean} options.invoketolower  Set if entered invoke should be parsed case sensitive or not
+         * @param {number}  options.guildonwerperm Set the permission for guild owners
          */
         this.setOptions = function(options) {
             if (typeof options.msgcolor == "number")
@@ -125,6 +127,10 @@ class CmdParser {
                 this.options.invoketolower = options.invoketolower
             else if (options.invoketolower)
                 console.log("[CMDPARSER] Invalid option set for 'invoketolower'")
+            if (typeof options.guildonwerperm == "number")
+                this.options.guildonwerperm = options.guildonwerperm
+            else if (options.guildonwerperm)
+                console.log("[CMDPARSER] Invalid option set for 'guildonwerperm'")
         }
 
         /**
@@ -238,6 +244,16 @@ class CmdParser {
                 return false
             }
 
+            this.checkPerm = function(memb) {
+                var lvlm = parseInt(this.getPermLvl(memb))
+                var lvlr = parseInt(this.cmds[invoke].perm)
+
+                if (memb.guild.owner.id == memb.id && this.options.guildonwerperm)
+                    return true
+
+                return lvlm < lvlr && author.id != this.host
+            }
+
             if (author.id != this.bot.user.id && this.checkPrefix()) {
             
                 // Splitting args with " " but not in quotes
@@ -251,14 +267,13 @@ class CmdParser {
                     .match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
                     .slice(1)
                     .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
-            
+
                 if (invoke == "help") {
                     this.sendHelpMsg(chan, args[0])
                 }
                 else if (invoke in this.cmds) {
-                    var lvlm = parseInt(this.getPermLvl(author))
-                    var lvlr = parseInt(this.cmds[invoke].perm)
-                    if (lvlm < lvlr && author.id != this.host) {
+                    console.log(this.checkPerm(author))
+                    if (!this.checkPerm(author)) {
                         this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {

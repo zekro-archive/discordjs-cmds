@@ -247,6 +247,7 @@ Returns **`CmdParser`** *this*
 | options.logfilepath | string | yes (`null`) | Path for command log file |
 | options.timeformat | string | yes (`null`) | Time format<br>`D` - Day<br>`M` - Month<br>`Y` - Year<br>`h` - Hour<br>`m` - Minute<br>`s` - Second |
 | options.invoketolower | boolean | yes (`true`) | Set if invoke should be converted to lowercase or not |
+| options.guildonwerperm | number | yes (`null`) | Set the specific permission level for guild owners |
 
 Returns **`CmdParser`** *this*
 
