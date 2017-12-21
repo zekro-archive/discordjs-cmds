@@ -56,7 +56,10 @@ class CmdParser {
          * @returns {CmdParser}
          */
         this.register = function(cmdfunc, invoke, aliases, description, help, type, perm) {
-            type = type.toUpperCase()
+            if (typeof type == "string")
+                type = type.toUpperCase()
+            else
+                type = null
             this.cmds[invoke] = {
                 cmdfunc:     cmdfunc,
                 invoke:      invoke,
