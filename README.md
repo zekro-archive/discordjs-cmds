@@ -105,7 +105,7 @@ All changelogs (after version `0.3.0`) you can find in the [**CHANGELOG.md**](ht
 
 # To-Do
 
-- [ ] Add option + function to gibe guild owners higher perm lvl
+- [ ] Add option + function to give guild owners higher perm lvl
 - [ ] Method to register bot host with max perm lvl
 - [x] Guild specific prefixes
 - [x] Custom command types
