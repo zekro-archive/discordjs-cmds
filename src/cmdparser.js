@@ -38,7 +38,7 @@ class CmdParser {
             logfilepath: null,
             timeformat: null,
             invoketolower: true,
-            guildonwerperm: null
+            ownerpermlvl: null
         }
       
         class Emitter extends EventEmitter {}
@@ -56,10 +56,7 @@ class CmdParser {
          * @returns {CmdParser}
          */
         this.register = function(cmdfunc, invoke, aliases, description, help, type, perm) {
-            if (typeof type == "string")
-                type = type.toUpperCase()
-            else
-                type = null
+            type = type.toUpperCase()
             this.cmds[invoke] = {
                 cmdfunc:     cmdfunc,
                 invoke:      invoke,
@@ -97,13 +94,14 @@ class CmdParser {
       
         /**
          * Set some options for CmdParser.
-         * @param {number}  options.msgcolor       Color for some messages like help message
-         * @param {boolean} options.cmdlog         Log commands defaulty after executing in console
-         * @param {boolean} options.msgedit        Parse edited messages as command message
-         * @param {string}  options.logfilepath    Write command log into logfile, set to null or '' to disable
-         * @param {string}  options.timeformat     Time / Date format for log time
-         * @param {boolean} options.invoketolower  Set if entered invoke should be parsed case sensitive or not
-         * @param {number}  options.guildonwerperm Set the permission for guild owners
+         * @param {number}  options.msgcolor      Color for some messages like help message
+         * @param {boolean} options.cmdlog        Log commands defaulty after executing in console
+         * @param {boolean} options.msgedit       Parse edited messages as command message
+         * @param {string}  options.logfilepath   Write command log into logfile, set to null or '' to disable
+         * @param {string}  options.timeformat    Time / Date format for log time
+         * @param {boolean} options.invoketolower Set if entered invoke should be parsed case sensitive or not
+         * @param {number}  options.ownerpermlvl  Permission level for guild owners
+         * @returns {CmdParser}
          */
         this.setOptions = function(options) {
             if (typeof options.msgcolor == "number")
@@ -130,10 +128,12 @@ class CmdParser {
                 this.options.invoketolower = options.invoketolower
             else if (options.invoketolower)
                 console.log("[CMDPARSER] Invalid option set for 'invoketolower'")
-            if (typeof options.guildonwerperm == "number")
-                this.options.guildonwerperm = options.guildonwerperm
-            else if (options.guildonwerperm)
-                console.log("[CMDPARSER] Invalid option set for 'guildonwerperm'")
+            if (typeof options.ownerpermlvl == "number")
+                this.options.ownerpermlvl = options.ownerpermlvl
+            else if (options.ownerpermlvl)
+                console.log("[CMDPARSER] Invalid option set for 'ownerpermlvl'")
+
+            return this
         }
 
         /**
@@ -158,6 +158,10 @@ class CmdParser {
          * @returns {number} Max perm lvl
          */
         this.getPermLvl = function(memb) {
+            if (memb.id == this.host)
+                return 999
+            if (memb.guild.owner.id == memb.id && this.ownerpermlvl)
+                return this.ownerpermlvl
             var max = memb.roles.map(r => this.perms[r.id] ? this.perms[r.id] : 0).sort((a, b) => b - a)
             return max ? max[0] : 0
         } 
@@ -247,16 +251,6 @@ class CmdParser {
                 return false
             }
 
-            this.checkPerm = function(memb) {
-                var lvlm = parseInt(this.getPermLvl(memb))
-                var lvlr = parseInt(this.cmds[invoke].perm)
-
-                if (memb.guild.owner.id == memb.id && this.options.guildonwerperm)
-                    return true
-
-                return lvlm < lvlr && author.id != this.host
-            }
-
             if (author.id != this.bot.user.id && this.checkPrefix()) {
             
                 // Splitting args with " " but not in quotes
@@ -270,13 +264,14 @@ class CmdParser {
                     .match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
                     .slice(1)
                     .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
-
+            
                 if (invoke == "help") {
                     this.sendHelpMsg(chan, args[0])
                 }
                 else if (invoke in this.cmds) {
-                    console.log(this.checkPerm(author))
-                    if (!this.checkPerm(author)) {
+                    var lvlm = parseInt(this.getPermLvl(author))
+                    var lvlr = parseInt(this.cmds[invoke].perm)
+                    if (lvlm < lvlr) {
                         this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {
@@ -379,6 +374,11 @@ class CmdParser {
                 this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
         })
 
+        bot.on('ready', () => {
+            if (this.options.cmdlog)
+                console.log(`[CMDPARSER] Registered ${Object.keys(this.helplist).length} commands`)
+        })
+
         this.getTime = function() {
             function btf(inp) {
                 if (inp < 10)
@@ -387,11 +387,11 @@ class CmdParser {
             }
             var date = new Date(),
                 y = date.getFullYear(),
-                m = btf(date.getMonth()),
-            d = btf(date.getDate()),
-            h = btf(date.getHours()),
-            min = btf(date.getMinutes()),
-            s = btf(date.getSeconds());
+                m = btf(date.getMonth() + 1),
+                d = btf(date.getDate()),
+                h = btf(date.getHours()),
+                min = btf(date.getMinutes()),
+                s = btf(date.getSeconds());
             return !this.options.timeformat 
                    ? `[${d}.${m}.${y} - ${h}:${min}:${s}]`
                    : this.options.timeformat
