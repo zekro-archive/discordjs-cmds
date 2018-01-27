@@ -26,5 +26,9 @@
   "homepage": "https://github.com/zekrotja/discordjs-cmds#readme",
   "dependencies": {
     "discord.js": "^11.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.7.0",
+    "eslint-config-google": "^0.9.1"
   }
 }
