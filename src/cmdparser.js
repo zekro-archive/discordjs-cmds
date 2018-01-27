@@ -266,8 +266,9 @@ class CmdParser {
                     .substr(this.currPrefix.length)
                 if (this.options.invoketolower)
                     invoke = invoke.toLowerCase()
-                const args   = cont
-                    .match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
+                const args = cont
+                    //.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
+					.split(' ')
                     .slice(1)
                     .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
 
