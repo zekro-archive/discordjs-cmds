@@ -158,10 +158,11 @@ class CmdParser {
          * @returns {number} Max perm lvl
          */
         this.getPermLvl = function(memb) {
+            console.log(memb.guild.owner.id, memb.id, memb.guild.owner.id == memb.id, this.options.ownerpermlvl)
             if (memb.id == this.host)
                 return 999
-            if (memb.guild.owner.id == memb.id && this.ownerpermlvl)
-                return this.ownerpermlvl
+            if (memb.guild.owner.id == memb.id && this.options.ownerpermlvl)
+                return this.options.ownerpermlvl
             var max = memb.roles.map(r => this.perms[r.id] ? this.perms[r.id] : 0).sort((a, b) => b - a)
             return max ? max[0] : 0
         } 
@@ -260,9 +261,9 @@ class CmdParser {
                     .substr(this.currPrefix.length)
                 if (this.options.invoketolower)
                     invoke = invoke.toLowerCase()
-                const args = cont
+                const args   = cont
                     //.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
-					.split(' ')
+                    .split(' ')
                     .slice(1)
                     .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
             
@@ -362,8 +363,8 @@ class CmdParser {
             if (msg.channel.type == "text") {
                 this.parse(msg)
             }
-            else
-                this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
+            // else if (msg.author.id != this.bot.client.id)
+            //     this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
         })
 
         bot.on('messageUpdate', (msgOld, msgNew) => {
@@ -371,8 +372,8 @@ class CmdParser {
             if (msgNew.channel.type == "text") {
                 this.parse(msgNew)
             }
-            else
-                this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
+            // else if (msg.author.id != this.bot.client.id)
+            //     this.event.emit('commandFailed', this.errors.WRONG_CHANNEL, msg, 'Defaulty messages will be only parsed in public text channels.')
         })
 
         bot.on('ready', () => {
