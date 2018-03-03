@@ -78,7 +78,7 @@ cmd.setPerms(["2134792837489213749", "2319480812347123431"], 1)
 
 > If you want to react on some events the CmdParser event manager fires, use it like following
 ```js
-bot.on('commandFailed', (errtype) => console.log(`Failed Command: ${errtype}`))
+cmd.event.on('commandFailed', (errtype) => console.log(`Failed Command: ${errtype}`))
 ```
 
 ---
