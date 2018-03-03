@@ -36,6 +36,7 @@ class CmdParser {
             cmdlog: true,
             msgedit: true,
             logfilepath: null,
+            multlogfiles: null,
             timeformat: null,
             invoketolower: true,
             ownerpermlvl: null
@@ -100,6 +101,7 @@ class CmdParser {
          * @param {boolean} options.cmdlog        Log commands defaulty after executing in console
          * @param {boolean} options.msgedit       Parse edited messages as command message
          * @param {string}  options.logfilepath   Write command log into logfile, set to null or '' to disable
+         * @param {boolean} options.multlogfiles  Write command log into logfile and create new lofile on start, set to null or '' to disable
          * @param {string}  options.timeformat    Time / Date format for log time
          * @param {boolean} options.invoketolower Set if entered invoke should be parsed case sensitive or not
          * @param {number}  options.ownerpermlvl  Permission level for guild owners
@@ -122,6 +124,10 @@ class CmdParser {
                 this.options.logfilepath = options.logfilepath
             else if (options.logfilepath)
                 console.log("[CMDPARSER] Invalid option set for 'logfilepath'")
+            if (typeof options.multlogfiles == "string")
+                this.options.multlogfiles = options.multlogfiles
+            else if (options.multlogfiles)
+                console.log("[CMDPARSER] Invalid option set for 'multlogfiles'")
             if (typeof options.timeformat == "string")
                 this.options.timeformat = options.timeformat
             else if (options.timeformat)
@@ -381,6 +387,34 @@ class CmdParser {
         bot.on('ready', () => {
             if (this.options.cmdlog)
                 console.log(`[CMDPARSER] Registered ${Object.keys(this.helplist).length} commands`)
+            if (this.options.multlogfiles && this.options.multlogfiles != '') {
+                var fs = require('fs'),
+                    date = new Date(),
+                    yyyy = date.getFullYear(),
+                    mm = date.getMonth() + 1,
+                    dd = date.getDate(),
+                    datearr = [yyyy, mm, dd],
+                    end = false,
+                    pathsplit = this.options.multlogfiles.split('/'),
+                    onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
+                for (var i = 0; end != true; i++) {
+                    datearr.push('(' + i + ')')
+                    var datearrstr = datearr.join('_') + '.txt',
+                        logpath = onlypath + '/' + datearrstr
+                    if (!fs.existsSync(logpath)) {
+                        this.setOptions({logfilepath: logpath})
+                        if (!fs.existsSync(onlypath))
+                            fs.mkdirSync(onlypath)
+                        fs.appendFile(logpath, `${this.getTime()} [${bot.user.username}] logged in\n`, (err) => {
+                            if (err)
+                                this.event.emit('logInError', err)
+                        })
+                        end = true
+                    } else {
+                        datearr.pop()
+                    }
+                }
+            }
         })
 
         this.getTime = function() {
