@@ -59,7 +59,6 @@ class CmdParser {
             if (type) {
                 type = type.toUpperCase()
             }
-            type = type.toUpperCase()
             this.cmds[invoke] = {
                 cmdfunc:     cmdfunc,
                 invoke:      invoke,
