@@ -405,7 +405,11 @@ class CmdParser {
                         this.setOptions({logfilepath: logpath})
                         if (!fs.existsSync(onlypath))
                             fs.mkdirSync(onlypath)
-                        fs.appendFile(logpath, `${this.getTime()} [${bot.user.username}] logged in\n`, (err) => {
+                        fs.appendFile(logpath, `${this.getTime()} [BOT] Logged in\n`, (err) => {
+                            if (err)
+                                this.event.emit('logInError', err)
+                        })
+                        fs.appendFile(logpath, `${this.getTime()} [CMDPARSER] Registered ${Object.keys(this.helplist).length} commands\n`, (err) => {
                             if (err)
                                 this.event.emit('logInError', err)
                         })
