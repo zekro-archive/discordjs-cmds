@@ -399,7 +399,7 @@ class CmdParser {
                     onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
                 for (var i = 0; end != true; i++) {
                     datearr.push('(' + i + ')')
-                    var datearrstr = datearr.join('_') + '.txt',
+                    var datearrstr = 'log_' + datearr.join('_') + '.txt',
                         logpath = onlypath + '/' + datearrstr
                     if (!fs.existsSync(logpath)) {
                         this.setOptions({logfilepath: logpath})
