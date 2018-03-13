@@ -68,13 +68,13 @@ class CmdParser {
                 type:        type ? type : this.type.MISC,
                 perm:        perm ? perm : 0 
             }
-            if (aliases !== null)
+            if (aliases)
                 if (aliases.length > 0) {
                     aliases.forEach(a => {
                         this.cmds[a] = {
                             cmdfunc:     cmdfunc,
                             invoke:      a,
-                            root:        a,
+                            root:        invoke,
                             description: description ? description : "no description",
                             help:        help ? help : "no help",
                             type:        type ? type : this.type.MISC,
