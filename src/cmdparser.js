@@ -353,7 +353,7 @@ class CmdParser {
                         localcmdlist += `**${cmd.invoke}**  -  ${cmd.description}  -  *[Lvl. ${cmd.perm}]*\n`
                     }
                     if (localcmdlist != "")
-                        emb.addField(cat, localcmdlist + '\n-----\n')
+                        emb.addField(cat, localcmdlist + '-----\n')
                 }
             }
             chan.send("", emb).then(m => msg = m)
