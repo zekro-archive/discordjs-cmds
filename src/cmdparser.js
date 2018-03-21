@@ -350,10 +350,10 @@ class CmdParser {
                     var localcmdlist = ""
                     for (var inv in catlist[cat]) {
                         var cmd = catlist[cat][inv]
-                        localcmdlist += `**${cmd.invoke}**  -  ${cmd.description}  -  *[${cmd.type} | Lvl. ${cmd.perm}]*\n`
+                        localcmdlist += `**${cmd.invoke}**  -  ${cmd.description}  -  *[Lvl. ${cmd.perm}]*\n`
                     }
                     if (localcmdlist != "")
-                        emb.addField(cat, localcmdlist)
+                        emb.addField(cat, localcmdlist + '\n-----\n')
                 }
             }
             chan.send("", emb).then(m => msg = m)
