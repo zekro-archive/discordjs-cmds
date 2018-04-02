@@ -105,7 +105,7 @@ All changelogs (after version `0.3.0`) you can find in the [**CHANGELOG.md**](ht
 
 # To-Do
 
-- [ ] Add option + function to give guild owners higher perm lvl
+- [ ] Add option + function to give guilds higher perm lvl
 - [ ] Method to register bot host with max perm lvl
 - [x] Guild specific prefixes
 - [x] Custom command types
@@ -248,7 +248,7 @@ Returns **`CmdParser`** *this*
 | options.multlogfiles | string | yes (`null`) | Path for command log file created on each startup |
 | options.timeformat | string | yes (`null`) | Time format<br>`D` - Day<br>`M` - Month<br>`Y` - Year<br>`h` - Hour<br>`m` - Minute<br>`s` - Second |
 | options.invoketolower | boolean | yes (`true`) | Set if invoke should be converted to lowercase or not |
-| options.guildonwerperm | number | yes (`null`) | Set the specific permission level for guild owners |
+| options.ownerpermlvl | number | yes (`null`) | Set the specific permission level for guild owners |
 
 Returns **`CmdParser`** *this*
 
