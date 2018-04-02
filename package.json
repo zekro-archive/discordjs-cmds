@@ -1,6 +1,6 @@
 {
   "name": "discordjs-cmds",
-  "version": "0.6.11",
+  "version": "0.7.0",
   "description": "Simple command parser for discord.js",
   "main": "src/cmdparser.js",
   "scripts": {
