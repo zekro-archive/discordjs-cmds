@@ -22,6 +22,7 @@ cmd
           timeformat: "Y/M/D h:m:s",
           invoketolower: false,
           guildonwerperm: 3,
+          multlogfiles: 'abc'
       })
 
 
