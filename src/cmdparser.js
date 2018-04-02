@@ -69,13 +69,13 @@ class CmdParser {
                 type:        type ? type : this.type.MISC,
                 perm:        perm ? perm : 0 
             }
-            if (aliases != null)
+            if (aliases)
                 if (aliases.length > 0) {
                     aliases.forEach(a => {
                         this.cmds[a] = {
                             cmdfunc:     cmdfunc,
                             invoke:      a,
-                            root:        a,
+                            root:        invoke,
                             description: description ? description : "no description",
                             help:        help ? help : "no help",
                             type:        type ? type : this.type.MISC,
@@ -356,10 +356,10 @@ class CmdParser {
                     var localcmdlist = ""
                     for (var inv in catlist[cat]) {
                         var cmd = catlist[cat][inv]
-                        localcmdlist += `**${cmd.invoke}**  -  ${cmd.description}  -  *[${cmd.type} | Lvl. ${cmd.perm}]*\n`
+                        localcmdlist += `**${cmd.invoke}**  -  ${cmd.description}  -  *[Lvl. ${cmd.perm}]*\n`
                     }
                     if (localcmdlist != "")
-                        emb.addField(cat, localcmdlist)
+                        emb.addField(cat, localcmdlist + '-----\n')
                 }
             }
             chan.send("", emb).then(m => msg = m)
