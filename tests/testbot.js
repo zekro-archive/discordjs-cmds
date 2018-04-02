@@ -21,12 +21,12 @@ cmd
           logfilepath: "logfiles/",
           timeformat: "Y/M/D h:m:s",
           invoketolower: false,
-          guildonwerperm: 3,
+          ownerpermlvl: 5,
           multlogfiles: 'abc'
       })
 
 
-cmd.event.on('logError', (msg, err) => console.log(err))
-cmd.event.on('commandFailed', (type, msg, err) => console.log(err))
+// cmd.event.on('logError', (msg, err) => console.log(err))
+cmd.on('commandFailed', (type, msg, err) => console.log(err))
 
 client.login(config.token)

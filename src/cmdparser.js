@@ -7,8 +7,9 @@ const Discord = require('discord.js')
 * @param {string}         prefix Command Prefix
 * @param {Discord.Client} bot    Bot Instance
 */
-class CmdParser {
+class CmdParser extends EventEmitter {
     constructor(bot, prefix) {
+        super()
         this.prefix = prefix
         this.bot = bot
         this.type = {
@@ -41,9 +42,6 @@ class CmdParser {
             invoketolower: true,
             ownerpermlvl: null
         }
-      
-        class Emitter extends EventEmitter {}
-        this.event = new Emitter()
       
         /**
          * Register a command.
@@ -282,7 +280,7 @@ class CmdParser {
                     var lvlm = parseInt(this.getPermLvl(author))
                     var lvlr = parseInt(this.cmds[invoke].perm)
                     if (lvlm < lvlr) {
-                        this.event.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
+                        this.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {
                         try {
@@ -301,13 +299,13 @@ class CmdParser {
                                     fs.mkdirSync(onlypath)
                                 fs.appendFile(path, `${this.getTime()} [${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
                                     if (err)
-                                        this.event.emit('logError', msg, err)
+                                        this.emit('logError', msg, err)
                                 })
                             }
-                            this.event.emit('commandExecuted', msg)
+                            this.emit('commandExecuted', msg)
                         }
                         catch (err) {
-                            this.event.emit('commandFailed', this.errors.EXECUTION_ERROR, msg, err)
+                            this.emit('commandFailed', this.errors.EXECUTION_ERROR, msg, err)
                         }
                     }
                 }
@@ -407,11 +405,11 @@ class CmdParser {
                             fs.mkdirSync(onlypath)
                         fs.appendFile(logpath, `${this.getTime()} [BOT] Logged in\n`, (err) => {
                             if (err)
-                                this.event.emit('logInError', err)
+                                this.emit('logInError', err)
                         })
                         fs.appendFile(logpath, `${this.getTime()} [CMDPARSER] Registered ${Object.keys(this.helplist).length} commands\n`, (err) => {
                             if (err)
-                                this.event.emit('logInError', err)
+                                this.emit('logInError', err)
                         })
                         end = true
                     } else {
