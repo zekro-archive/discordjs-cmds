@@ -267,7 +267,7 @@ Returns **`CmdParser`** *this*
 
 ### `.setGuildPres(guildpres)`
 
-> Set the specific prefixes for guils
+> Set the specific prefixes for guilds
 
 | Parameter | Type | Optional (Default) | Description |
 |-----------|------|--------------------|-------------|
