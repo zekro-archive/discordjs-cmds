@@ -164,7 +164,6 @@ class CmdParser extends EventEmitter {
          * @returns {number} Max perm lvl
          */
         this.getPermLvl = function(memb) {
-            console.log(memb.guild.owner.id, memb.id, memb.guild.owner.id == memb.id, this.options.ownerpermlvl)
             if (memb.id == this.host)
                 return 999
             if (memb.guild.owner.id == memb.id && this.options.ownerpermlvl)
