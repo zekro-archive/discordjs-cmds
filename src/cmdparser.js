@@ -262,13 +262,13 @@ class CmdParser extends EventEmitter {
                 // Splitting args with " " but not in quotes
                 // -> https://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli#16261693
                 var invoke = cont
-                    .split(' ')[0]
+                    .split(/ +/g)[0]
                     .substr(this.currPrefix.length)
                 if (this.options.invoketolower)
                     invoke = invoke.toLowerCase()
                 const args   = cont
                     //.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
-                    .split(' ')
+                    .split(/ +/g)
                     .slice(1)
                     .map(a => a.indexOf(' ') > 0 ? a.replace('"', '').replace('"', '') : a)
             
