@@ -1,9 +1,9 @@
  <div align="center">
      <h1>~ discordjs-cmds ~</h1>
      <strong>Simple-to-use command parser for discord.js</strong><br><br>
+     <a href="https://travis-ci.org/zekroTJA/discordjs-cmds" ><img src="https://travis-ci.org/zekroTJA/discordjs-cmds.svg?branch=master" /></a>
      <a href="https://www.npmjs.com/package/discordjs-cmds" ><img src="https://img.shields.io/npm/v/discordjs-cmds.svg" /></a>&nbsp;
      <a href="https://www.npmjs.com/package/discordjs-cmds" ><img src="https://img.shields.io/npm/dt/discordjs-cmds.svg" /></a>
-
  </div>
 
 ---
