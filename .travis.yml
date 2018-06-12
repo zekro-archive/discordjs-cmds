@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - lts/*
+  - 10.4
+  - 9.11
+  - 8.11
+  - 7.10
+
+env:
+  global:
+    secure: "SV3N3nKmX+jfRv2Q+vFP90fHtxyXkrsdvsLRBNyKg204j1sw5IW4AKYSnbJPqRM3PD1D0/Hl09L77DB2wMDsp+2V/5ld1YDxy8ea6YGUYxZBrF/V3D/Mkfb1Xa9h5WLSbnHvCjf4hRehu8mx9WB1LDk/oX9nl6jp5l95sSVrHIoQEIulZL+U6B8KuRbvdSwIyLml3MI4S6/kFmg5I2mz+3AwjxHKwUpOux5TRRrt/xIjkfIPGkkA1NTXsM1019+HA/JK5XJZu1IElgY1J61qn4gmrrMb5UJBie46hoy0+huVAR39x0AAMMxYRKs1ZckJEnPIVWcHr0acgQF3YWN7EBdqDZ/P4gY3OCTcEWUSKrMwDiRe66VrMZS2dPClfh3IZJ/0IxZmza+4dt6JuRHD/9uQfo8qpqt6zCzbiKHwmCMM5ekF4FYMOdJaN7B4Dyb0FeoK1aT0OG8EibFzwYrw806uc0+jtKNdQjIfIhbDwth+4UD94CyyyFyyO5rdmP4Hi3UKrVj8Wjm9/3SeSBClLvOGnW3C0HB/4rsAf6weDjx1JOnv+7+vvAAcHTnzTexcQzZMehUonlrra5tA5zyfjN6PgPwnWv0Df9lRG+g0YAAYmI+B3ADcc5LPw6O49ceODwmramtEmqF54unMHCXtYe0ovaiXaRit+rRyCP5dJOM="
+
+before_script:
+  - npm install
+
+script:
+  - npm test
