@@ -3,3 +3,4 @@ node_modules/*
 logfiles/*
 .vscode/*
 abc/*
+package-lock.json
