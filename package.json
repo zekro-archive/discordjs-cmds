@@ -1,10 +1,10 @@
 {
   "name": "discordjs-cmds",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Simple command parser for discord.js",
   "main": "src/cmdparser.js",
   "scripts": {
-    "test": "node tests/testbot.js"
+    "test": "node tests/testbot.js $DISCORD_TOKEN --ci"
   },
   "repository": {
     "type": "git",

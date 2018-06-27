@@ -1,6 +1,5 @@
 const Discord = require('discord.js')
 const CommandParser = require('../src/cmdparser.js')
-const config = require('../token.json')
 
 
 const client = new Discord.Client()
@@ -14,6 +13,7 @@ cmd
       .setGuildPres({"287535046762561536": "_"})
       .addType("LOL")
       .register(cmdTest, "test", ["t"], "test command", null, "LOL", 2)
+      .register(cmdTest, "say", ["s", "call"], "test say cmd", `abcasdasd`, null, 2)
       .setPerms("289901361951277056", 3)
       .setOptions({
           msgcolor: 0x0cd682,
@@ -25,8 +25,17 @@ cmd
           multlogfiles: 'abc'
       })
 
+cmd.createDocs("test.md", "md")
+
 
 // cmd.event.on('logError', (msg, err) => console.log(err))
 cmd.on('commandFailed', (type, msg, err) => console.log(err))
 
-client.login(config.token)
+if (process.argv.includes('--ci')) {
+      client.on('ready', () => {
+            console.log('TEST SUCCESSFULL. SHUTTING DOWN...')
+            process.exit(0)
+      })
+}
+
+client.login(process.argv[2])
