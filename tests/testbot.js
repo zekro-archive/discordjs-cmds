@@ -5,8 +5,8 @@ const CommandParser = require('../src/cmdparser.js')
 const client = new Discord.Client()
 const cmd = new CommandParser.CmdParser(client, "::")
 
-function cmdTest(msg, args) {
-      msg.channel.send(`Rolename: ${msg.member.highestRole.name}\ntypeof role: \`${typeof msg.member.highestRole}\``)
+function cmdTest(msg, args, author, chan, guild) {
+      return chan.send(`Rolename: ${author.highestRole.name}\ntypeof role: \`${typeof author.highestRole}\``)
 }
 
 cmd
@@ -29,7 +29,7 @@ cmd.createDocs("test.md", "md")
 
 
 // cmd.event.on('logError', (msg, err) => console.log(err))
-cmd.on('commandFailed', (type, msg, err) => console.log(err))
+cmd.on('commandFailed', (type, msg, err) => console.log("--> ERROR:", err))
 
 if (process.argv.includes('--ci')) {
       client.on('ready', () => {

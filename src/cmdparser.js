@@ -46,7 +46,9 @@ class CmdParser extends EventEmitter {
       
         /**
          * Register a command.
-         * @param {function}       cmdfunc     Command Function
+         * @param {function}       cmdfunc     Command Function<br>
+         *                                     Getting args: {Message} message, {string[]} args, {Member} author, {Channel} channel, {Guild} guild<br>
+         *                                     Must return:  {Promise} pending promise
          * @param {string}         invoke      Command Invoke
          * @param {string[]}       aliases     Command Aliases
          * @param {string}         description Command Description
@@ -324,9 +326,7 @@ class CmdParser extends EventEmitter {
                 switch (format) {
                     case "html":
                         data = _serializeHtml(cmds, categories, elements)
-                        break
-                    case "md":
-                    case "markdown":
+                        break;
                     default:
                         data = _serializeMarkdown(cmds, categories, elements)
                 }
@@ -386,29 +386,41 @@ class CmdParser extends EventEmitter {
                         this.emit('commandFailed', this.errors.NOT_PERMITTED, msg, 'To low permissions.')
                     } 
                     else {
-                        try {
-                            if (this.options.cmdlog)
-                                console.log(`[COMMAND] ${this.getTime()} (${author.user.username} @ ${guild.name}) '${cont}'`)
-                            this.cmds[invoke].cmdfunc(msg, args)
-                            if (this.options.logfilepath && this.options.logfilepath != '') {
-                                var fs = require('fs')
-                                var pathsplit = this.options.logfilepath.split('/')
-                                if (pathsplit[pathsplit.length - 1].indexOf('.') > -1)
-                                    var path = pathsplit.join('/')
-                                else
-                                    var path = pathsplit.join('/') + '/cmdlog.txt'
-                                var onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
-                                if (!fs.existsSync(onlypath))
-                                    fs.mkdirSync(onlypath)
-                                fs.appendFile(path, `${this.getTime()} [${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
-                                    if (err)
-                                        this.emit('logError', msg, err)
-                                })
-                            }
-                            this.emit('commandExecuted', msg)
-                        }
-                        catch (err) {
-                            this.emit('commandFailed', this.errors.EXECUTION_ERROR, msg, err)
+                        
+                        if (this.options.cmdlog)
+                            console.log(`[COMMAND] ${this.getTime()} (${author.user.username} @ ${guild.name}) '${cont}'`)
+                        
+                        var promise = this.cmds[invoke].cmdfunc(msg, args, author, chan, guild)
+                        if (!promise)
+                            console.log(
+                                '-------------------------------------------------------------------------\n' +
+                                '[WARNING] Attention: CMD functions not returning a promise is deprecated!' + 
+                                '\n------------------------------------------------------------------------'
+                            )
+                        else {
+                            promise
+                            .then(() => {
+                                if (this.options.logfilepath && this.options.logfilepath != '') {
+                                    var fs = require('fs')
+                                    var pathsplit = this.options.logfilepath.split('/')
+                                    var path
+                                    if (pathsplit[pathsplit.length - 1].indexOf('.') > -1)
+                                        path = pathsplit.join('/')
+                                    else
+                                        path = pathsplit.join('/') + '/cmdlog.txt'
+                                    var onlypath = (pathsplit[pathsplit.length - 1].indexOf('.') > -1 ? pathsplit.slice(0, pathsplit.length - 1) : pathsplit).join('/')
+                                    if (!fs.existsSync(onlypath))
+                                        fs.mkdirSync(onlypath)
+                                    fs.appendFile(path, `${this.getTime()} [${author.user.username} (${author.user.id}) @ ${guild.name} (${guild.id})] '${cont}'\n`, (err) => {
+                                        if (err)
+                                            this.emit('logError', msg, err)
+                                    })
+                                }
+                                this.emit('commandExecuted', msg)
+                            })
+                            .catch(err => {
+                                this.emit('commandFailed', this.errors.EXECUTION_ERROR, msg, err)
+                            })
                         }
                     }
                 }
