@@ -31,7 +31,7 @@ cmd.createDocs("test.md", "md")
 // cmd.event.on('logError', (msg, err) => console.log(err))
 cmd.on('commandFailed', (type, msg, err) => console.log("--> ERROR:", err))
 
-if (process.argv.includes('--ci')) {
+if (process.argv.includes('ci')) {
       client.on('ready', () => {
             console.log('TEST SUCCESSFULL. SHUTTING DOWN...')
             process.exit(0)
