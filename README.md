@@ -5,6 +5,8 @@
      <a href="https://zekro.de/docs/discordjs-cmds/CmdParser.html"><img src="https://img.shields.io/badge/docs-jsdocs-c918cc.svg" /></a>
      <a href="https://www.npmjs.com/package/discordjs-cmds" ><img src="https://img.shields.io/npm/v/discordjs-cmds.svg" /></a>&nbsp;
      <a href="https://www.npmjs.com/package/discordjs-cmds" ><img src="https://img.shields.io/npm/dt/discordjs-cmds.svg" /></a>
+ <br>
+ <a href="https://nodei.co/npm/discordjs-cmds/"><img src="https://nodei.co/npm/discordjs-cmds.png?downloads=true"></a>
  </div>
 
 ---
