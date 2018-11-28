@@ -12,6 +12,13 @@
 
 ---
 
+<div align="center">
+ <h1>THIS VERSION IS DEPRECATED</h1>
+ <h2>Take a look at the new, rewrote version <a href="https://github.com/zekroTJA/discordjs-cmds2">discordjs-cmds2</a>.</h2>
+</div>
+
+---
+
 ```
 npm install discordjs-cmds --save
 ```
