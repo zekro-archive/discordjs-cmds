@@ -346,7 +346,7 @@ class CmdParser extends EventEmitter {
                   guild  = msg.guild,
                   chan   = msg.channel
         
-            if (author == null) return
+            if (msg.author.user.bot) return
 
             this.checkPrefix = function() {
                 if (cont.startsWith(this.prefix)) {
